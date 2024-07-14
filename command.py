@@ -151,7 +151,7 @@ async def cf_user(message: GroupMessage, params):
     anotherresponse = requests.get("https://codeforces.com/api/user.status?handle=" + params)
     data = response.json()
     anotherdata = anotherresponse.json()
-    ac = 0
+    ac = 5
 
     processed_problems = set()
 
