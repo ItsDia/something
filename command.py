@@ -3,8 +3,9 @@ import random
 from botpy.message import GroupMessage
 from bot_qq.qqutils.ext import Command
 from datetime import datetime
-
+import messageSend
 import requests
+import sqlite3
 
 _log = logging.getLogger(__name__)
 
@@ -28,8 +29,27 @@ async def help_command(message: GroupMessage, params):
         content=content,
     )
     return True
+
+
 @Command("今日运势")
 async def today_fortune(message: GroupMessage, params):
+    messageSend.init_db_dailyLuck()
+    me_info = await message._api.me()
+    qqid = me_info['id']
+
+    with sqlite3.connect('databases/dailyLuck.db') as conn:
+        c = conn.cursor()
+        c.execute('SELECT luck FROM dailyLuck WHERE qqid=?', (qqid,))
+        result = c.fetchone()
+        if result:
+            await message._api.post_group_message(
+                group_openid=message.group_openid,
+                msg_type=0,
+                msg_id=message.id,
+                content= "\n🔮 今日运势已查询过，请勿重复查询。" + result[0],
+            )
+            return True
+
     # 运势值计算
     luck_categories = ['工作运势', '爱情运势', '健康运势', '财运运势']
     luck_values = {category: random.randint(0, 100) for category in luck_categories}
@@ -50,11 +70,11 @@ async def today_fortune(message: GroupMessage, params):
     content = f"""
 🔮 今日运势 - {datetime.now().strftime('%Y年%m月%d日')} 🔮
 ------------------------------------
-{' '.join(['✨' for _ in range(int(all_luck/10))])}
+{' '.join(['✨' for _ in range(int(all_luck / 10))])}
 总体运势: {fortune} ({int(all_luck)}/100)
 ------------------------------------
 📊 详细运势:
-{chr(10).join([f"  {category}: {'🟩' * int(value/10)}{'🟨' * (10-int(value/10))} {value}%" for category, value in luck_values.items()])}
+{chr(10).join([f"  {category}: {'🟩' * int(value / 10)}{'🟨' * (10 - int(value / 10))} {value}%" for category, value in luck_values.items()])}
 ------------------------------------
 """
 
@@ -75,6 +95,16 @@ async def today_fortune(message: GroupMessage, params):
 
     content += f"👍 宜: {suggestion}\n👎 忌: {taboo}\n------------------------------------"
 
+    with sqlite3.connect('databases/dailyLuck.db') as conn:
+        c = conn.cursor()
+        c.execute('''
+            INSERT INTO dailyLuck (qqid, luck)
+            VALUES (?, ?)
+            ON CONFLICT(qqid) DO UPDATE SET
+            luck=excluded.luck
+        ''', (qqid, content))
+        conn.commit()
+
     await message._api.post_group_message(
         group_openid=message.group_openid,
         msg_type=0,
@@ -82,6 +112,7 @@ async def today_fortune(message: GroupMessage, params):
         content=content,
     )
     return True
+
 
 @Command("查看近期cf比赛")
 async def recent_cf(message: GroupMessage, params):
@@ -114,6 +145,7 @@ async def recent_cf(message: GroupMessage, params):
         )
     return True
 
+
 @Command("去哪吃")
 async def where_to_eat(message: GroupMessage, params):
     choices = [
@@ -142,38 +174,68 @@ async def where_to_eat(message: GroupMessage, params):
 
 @Command("查看cf用户")
 async def cf_user(message: GroupMessage, params):
-    _log.info(f"params: {params}")
+    # 如果没有提供参数，尝试从数据库获取绑定的Codeforces账号
+    if not params:
+        # 初始化数据库连接
+        messageSend.init_db()
+
+        # 获取稳定的用户ID
+        me_info = await message._api.me()
+        qqid = me_info['id']
+
+        with sqlite3.connect('databases/user.db') as conn:
+            c = conn.cursor()
+            c.execute('SELECT cfid FROM cf_user_bindings WHERE qqid=?', (qqid,))
+            result = c.fetchone()
+            if result:
+                params = result[0]
+            else:
+                await message._api.post_group_message(
+                    group_openid=message.group_openid,
+                    msg_type=0,
+                    msg_id=message.id,
+                    content="\n❌ 您尚未绑定Codeforces账号，请先绑定或提供用户名。"
+                )
+                return True
 
     if isinstance(params, list):
         params = ";".join(params)
 
-    response = requests.get("https://codeforces.com/api/user.info?handles=" + params)
-    anotherresponse = requests.get("https://codeforces.com/api/user.status?handle=" + params)
-    data = response.json()
-    anotherdata = anotherresponse.json()
-    ac = 5
+    # 获取用户信息
+    response = requests.get(f"https://codeforces.com/api/user.info?handles={params}")
+    user_data = response.json()
 
+    if user_data['status'] != 'OK':
+        await message._api.post_group_message(
+            group_openid=message.group_openid,
+            msg_type=0,
+            msg_id=message.id,
+            content="\n❌ 用户未找到。请检查用户名是否正确。"
+        )
+        return True
+
+    # 获取用户提交状态
+    status_response = requests.get(f"https://codeforces.com/api/user.status?handle={params}")
+    status_data = status_response.json()
+
+    ac = 5
     processed_problems = set()
 
-    # 检查 anotherdata 的状态
-    if anotherdata['status'] == 'OK':
-        # 遍历 anotherdata['result'] 并检查 'verdict' 键是否存在
-        for result in anotherdata['result']:
+    if status_data['status'] == 'OK':
+        for result in status_data['result']:
             problem = result.get('problem', {})
             contest_id = problem.get('contestId')
             index = problem.get('index')
             if contest_id and index:
                 problem_id = (contest_id, index)
-                if problem_id not in processed_problems:
-                    if result['verdict'] == 'OK':
-                        ac += 1
-                        processed_problems.add(problem_id)
+                if problem_id not in processed_problems and result['verdict'] == 'OK':
+                    ac += 1
+                    processed_problems.add(problem_id)
     else:
-        _log.error(f"Failed to retrieve user status: {anotherdata}")
+        _log.error(f"Failed to retrieve user status: {status_data}")
 
-    if data['status'] == 'OK':
-        user = data['result'][0]
-        content = f"""
+    user = user_data['result'][0]
+    content = f"""
 🏆 Codeforces用户信息 🏆
 --------------------------
 👤 用户名: {user['handle']}
@@ -183,9 +245,7 @@ async def cf_user(message: GroupMessage, params):
 👑 最高段位: {user['maxRank']}
 🏆 解题数: {ac}
 --------------------------
-        """
-    else:
-        content = "\n❌ 用户未找到。请检查用户名是否正确。"
+    """
 
     await message._api.post_group_message(
         group_openid=message.group_openid,
@@ -193,4 +253,50 @@ async def cf_user(message: GroupMessage, params):
         msg_id=message.id,
         content=content,
     )
+    return True
+
+
+@Command("绑定cf")
+async def bind_cf(message: GroupMessage, params):
+    # 获取稳定的用户ID
+    me_info = await message._api.me()
+    qqid = me_info['id']
+
+    if isinstance(params, list):
+        params = ";".join(params)
+
+    isExist = requests.get("https://codeforces.com/api/user.info?handles=" + params)
+    if isExist.json()['status'] == 'FAILED':
+        content = "\n❌ 请提供正确的Codeforces用户名。"
+    else:
+        messageSend.init_db()
+
+        cfid = str(params)
+
+        try:
+            with sqlite3.connect('databases/user.db') as conn:
+                c = conn.cursor()
+                c.execute('''
+                    INSERT INTO cf_user_bindings (qqid, cfid)
+                    VALUES (?, ?)
+                    ON CONFLICT(qqid) DO UPDATE SET
+                    cfid=excluded.cfid
+                ''', (qqid, cfid))
+                conn.commit()
+
+                # 立即查询并打印结果
+                c.execute('SELECT * FROM cf_user_bindings WHERE qqid=?', (qqid,))
+                result = c.fetchone()
+
+            content = f"\n✅ 成功绑定Codeforces账号: {params}"
+        except sqlite3.Error as e:
+            content = f"\n❌ 数据库操作失败: {str(e)}"
+
+    await message._api.post_group_message(
+        group_openid=message.group_openid,
+        msg_type=0,
+        msg_id=message.id,
+        content=content,
+    )
+
     return True

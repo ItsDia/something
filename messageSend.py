@@ -3,10 +3,33 @@ import botpy
 from botpy.message import GroupMessage
 from bot_qq.qqutils.ext import Command
 
+import sqlite3
 import command
 
 _log = logging.getLogger(__name__)
+def init_db():
+    conn = sqlite3.connect('databases/user.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS cf_user_bindings (
+            qqid TEXT PRIMARY KEY,
+            cfid TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
 
+def init_db_dailyLuck():
+    conn = sqlite3.connect('databases/dailyLuck.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS dailyLuck (
+            qqid TEXT PRIMARY KEY,
+            luck TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
 
 class MyClient(botpy.Client):
     async def on_ready(self):
