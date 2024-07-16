@@ -5,6 +5,7 @@ from bot_qq.qqutils.ext import Command
 
 import sqlite3
 import command
+import commandAI
 
 _log = logging.getLogger(__name__)
 def init_db():

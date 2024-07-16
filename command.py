@@ -1,12 +1,13 @@
 import logging
 import random
+
+import zhipuai
 from botpy.message import GroupMessage
 from bot_qq.qqutils.ext import Command
 from datetime import datetime
 import messageSend
 import requests
 import sqlite3
-
 _log = logging.getLogger(__name__)
 
 
@@ -36,19 +37,26 @@ async def today_fortune(message: GroupMessage, params):
     messageSend.init_db_dailyLuck()
     me_info = message.author.member_openid
     qqid = me_info
+    current_date = datetime.now()
+    date = current_date.strftime('%Y-%m-%d')
 
     with sqlite3.connect('databases/dailyLuck.db') as conn:
         c = conn.cursor()
-        c.execute('SELECT luck FROM dailyLuck WHERE qqid=?', (qqid,))
+        c.execute('''SELECT luck, date FROM dailyLuck WHERE qqid = ?''', (qqid,))
         result = c.fetchone()
+
         if result:
-            await message._api.post_group_message(
-                group_openid=message.group_openid,
-                msg_type=0,
-                msg_id=message.id,
-                content= "\n🔮 今日运势已查询过，请勿重复查询。\n" + result[0],
-            )
-            return True
+            stored_luck, stored_date = result
+            stored_date = datetime.strptime(stored_date, '%Y-%m-%d')
+
+            if stored_date.month == current_date.month and stored_date.day == current_date.day:
+                await message._api.post_group_message(
+                    group_openid=message.group_openid,
+                    msg_type=0,
+                    msg_id=message.id,
+                    content="\n🔮 今日运势已查询过，请勿重复查询。\n" + stored_luck,
+                )
+                return True
 
     # 运势值计算
     luck_categories = ['工作运势', '爱情运势', '健康运势', '财运运势']
@@ -68,7 +76,7 @@ async def today_fortune(message: GroupMessage, params):
 
     # 今日运势内容
     content = f"""
-🔮 今日运势 - {datetime.now().strftime('%Y年%m月%d日')} 🔮
+🔮 今日运势 - {current_date.strftime('%Y年%m月%d日')} 🔮
 \n
 {' '.join(['✨' for _ in range(int(all_luck / 10))])}
 总体运势: {fortune} ({int(all_luck)}/100)
@@ -98,11 +106,11 @@ async def today_fortune(message: GroupMessage, params):
     with sqlite3.connect('databases/dailyLuck.db') as conn:
         c = conn.cursor()
         c.execute('''
-            INSERT INTO dailyLuck (qqid, luck)
-            VALUES (?, ?)
+            INSERT INTO dailyLuck (qqid, luck, date)
+            VALUES (?, ?, ?)
             ON CONFLICT(qqid) DO UPDATE SET
-            luck=excluded.luck
-        ''', (qqid, content))
+            luck=excluded.luck, date=excluded.date
+        ''', (qqid, content, date))
         conn.commit()
 
     await message._api.post_group_message(
