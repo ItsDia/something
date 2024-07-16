@@ -10,7 +10,7 @@ import requests
 import sqlite3
 from zhipuai import ZhipuAI
 
-client = ZhipuAI(api_key="d1e2424354a9423bec7c26dbf0277e4e.YPjaZtTSaNpz8O22")
+client = ZhipuAI(api_key="")
 
 @Command("ai")
 async def ai_command(message: GroupMessage, params):
