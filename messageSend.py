@@ -1,6 +1,8 @@
 import logging
 import botpy
 from botpy.message import GroupMessage
+from botpy.types.inline import Keyboard, Button, RenderData, Action, Permission, KeyboardRow
+
 from bot_qq.qqutils.ext import Command
 
 import sqlite3
@@ -31,7 +33,7 @@ def init_db_dailyLuck():
     ''')
     conn.commit()
     conn.close()
-
+    
 class MyClient(botpy.Client):
     async def on_ready(self):
         _log.info(f"robot 「{self.robot.name}」 on_ready!")
@@ -56,7 +58,6 @@ if __name__ == "__main__":
     # 通过kwargs，设置需要监听的事件通道
     intents = botpy.Intents(public_messages=True)
     client = MyClient(intents=intents)
-    APPID = "102147614"
-    SECRET = "j7VuJi7WvKkAa0QqGh8Z0RsJlDf7Z1Tw"
+
   
     client.run(appid=APPID, secret=SECRET)

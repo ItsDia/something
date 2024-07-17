@@ -3,6 +3,9 @@ import random
 
 import zhipuai
 from botpy.message import GroupMessage
+from botpy.types.message import KeyboardPayload
+from lxml import etree
+
 from bot_qq.qqutils.ext import Command
 from datetime import datetime
 import messageSend
@@ -22,7 +25,7 @@ async def help_command(message: GroupMessage, params):
 🎮 /绑定steam <steamid> - 绑定Steam账号
 ℹ️ /info <id> - 查看用户信息
 ====================
-    """
+"""
     await message._api.post_group_message(
         group_openid=message.group_openid,
         msg_type=0,
@@ -77,13 +80,13 @@ async def today_fortune(message: GroupMessage, params):
     # 今日运势内容
     content = f"""
 🔮 今日运势 - {current_date.strftime('%Y年%m月%d日')} 🔮
-\n
+
 {' '.join(['✨' for _ in range(int(all_luck / 10))])}
 总体运势: {fortune} ({int(all_luck)}/100)
-\n
+
 📊 详细运势:
 {chr(10).join([f"  {category}: {'🟩' * int(value / 10)}{'🟨' * (10 - int(value / 10))} {value}%" for category, value in luck_values.items()])}
-\n
+
 """
 
     # 建议和禁忌内容
@@ -101,7 +104,7 @@ async def today_fortune(message: GroupMessage, params):
     taboos = ["拖延", "不努力", "长时间玩游戏", "开摆", "玩Galgame", "写题解", "熬夜"]
     taboo = random.choice(taboos)
 
-    content += f"👍 宜: {suggestion}\n👎 忌: {taboo}\n\n"
+    content += f"👍 宜: {suggestion}\n👎 忌: {taboo}\n"
 
     with sqlite3.connect('databases/dailyLuck.db') as conn:
         c = conn.cursor()
@@ -130,7 +133,6 @@ async def recent_cf(message: GroupMessage, params):
     if data['status'] == 'OK':
         contests = data['result']
         result_str = "\n🏆 即将到来的Codeforces比赛 🏆\n"
-        result_str += "\n\n"
 
         for contest in contests:
             if contest['phase'] == 'BEFORE':
@@ -143,7 +145,7 @@ async def recent_cf(message: GroupMessage, params):
                 result_str += f" 开始时间: {start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
                 result_str += f" 持续时间: {duration_hours}小时{duration_minutes}分钟\n"
                 result_str += f" 类型: {contest['type']}\n"
-                result_str += "\n\n"
+                result_str += "\n"
 
         await message._api.post_group_message(
             group_openid=message.group_openid,
@@ -171,11 +173,13 @@ async def where_to_eat(message: GroupMessage, params):
         "厕所。"
     ]
     content = f"\n今天推荐: {random.choice(choices)}"
+    keyboard = messageSend.build_a_demo_keyboard()
     await message._api.post_group_message(
         group_openid=message.group_openid,
         msg_type=0,
         msg_id=message.id,
         content=content,
+        keyboard=keyboard,
     )
     return True
 
@@ -221,37 +225,23 @@ async def cf_user(message: GroupMessage, params):
         )
         return True
 
-    # 获取用户提交状态
-    status_response = requests.get(f"https://codeforces.com/api/user.status?handle={params}")
-    status_data = status_response.json()
-
-    ac = 5
-    processed_problems = set()
-
-    if status_data['status'] == 'OK':
-        for result in status_data['result']:
-            problem = result.get('problem', {})
-            contest_id = problem.get('contestId')
-            index = problem.get('index')
-            if contest_id and index:
-                problem_id = (contest_id, index)
-                if problem_id not in processed_problems and result['verdict'] == 'OK':
-                    ac += 1
-                    processed_problems.add(problem_id)
-    else:
-        _log.error(f"Failed to retrieve user status: {status_data}")
+    url = f"https://codeforces.com/profile/{params}"
+    response = requests.get(url).text
+    tree: etree._Element = etree.HTML(response, None)
+    result: list[etree._Element] = tree.xpath(
+        "//div[@class='_UserActivityFrame_footer']/div/div/div/text()")
+    target: str = str(result[0])
+    ac = target.split(" ")[0]
 
     user = user_data['result'][0]
     content = f"""
 🏆 Codeforces用户信息 🏆
-\n
 👤 用户名: {user['handle']}
 📊 当前评分: {user['rating']} 
 🔝 最高评分: {user['maxRating']}
 🎖 当前段位: {user['rank']}
 👑 最高段位: {user['maxRank']}
 🏆 解题数: {ac}
-\n
     """
 
     await message._api.post_group_message(

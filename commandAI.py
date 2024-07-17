@@ -10,7 +10,7 @@ import requests
 import sqlite3
 from zhipuai import ZhipuAI
 
-client = ZhipuAI(api_key="d1e2424354a9423bec7c26dbf0277e4e.YPjaZtTSaNpz8O22")
+client = ZhipuAI()
 
 @Command("ai")
 async def ai_command(message: GroupMessage, params):
@@ -20,7 +20,7 @@ async def ai_command(message: GroupMessage, params):
         messages=[
             {
                 "role": "system",
-                "content": "你是一位智能编程助手，你叫CodeGeeX。你会为用户回答关于编程、代码、计算机方面的任何问题，并提供格式规范、可以执行、准确安全的代码，并在必要时提供详细的解释。任务：请为输入代码提供格式规范的注释，包含多行注释和单行注释，请注意不要改动原始代码，只需要添加注释。 请用中文回答。"
+                "content": "你是一位智能编程助手，你叫CodeGeeX。你只会为用户回答关于编程、代码、计算机方面的任何问题，并提供格式规范、可以执行、准确安全的代码，并在必要时提供详细的解释。任务：请为输入代码提供格式规范的注释，包含多行注释和单行注释，请注意不要改动原始代码，只需要添加注释。 请用中文回答。"
             },
             {
                 "role": "user",
