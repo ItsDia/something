@@ -58,7 +58,7 @@ if __name__ == "__main__":
     # 通过kwargs，设置需要监听的事件通道
     intents = botpy.Intents(public_messages=True)
     client = MyClient(intents=intents)
-    APPID = "102147614"
-    SECRET = "j7VuJi7WvKkAa0QqGh8Z0RsJlDf7Z1Tw"
+    APPID = 
+    SECRET =
   
     client.run(appid=APPID, secret=SECRET)
