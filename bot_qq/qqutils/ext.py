@@ -1,6 +1,8 @@
 from functools import wraps
+
 from botpy.message import GroupMessage
 from pydantic import BaseModel
+
 
 class Command:
     command_handlers = []

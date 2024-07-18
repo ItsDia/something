@@ -1,18 +1,17 @@
 import logging
 import random
+import sqlite3
+from datetime import datetime
 
-import zhipuai
+import aiohttp
+import requests
 from botpy.message import GroupMessage
-from botpy.types.message import KeyboardPayload
 from lxml import etree
 
-from bot_qq.qqutils.ext import Command
-from datetime import datetime
 import messageSend
-import requests
-import sqlite3
-_log = logging.getLogger(__name__)
+from bot_qq.qqutils.ext import Command
 
+_log = logging.getLogger(__name__)
 
 @Command("help")
 async def help_command(message: GroupMessage, params):
@@ -20,10 +19,12 @@ async def help_command(message: GroupMessage, params):
 📚 可用命令列表 📚
 ====================
 🔮 /今日运势 - 查看今天的运势
-🔗 /绑定bilibili <biliid> - 绑定B站账号
-🏆 /绑定codeforces <cfid> - 绑定CF账号
-🎮 /绑定steam <steamid> - 绑定Steam账号
-ℹ️ /info <id> - 查看用户信息
+🔗 /查看近期cf比赛
+🏆 /查看cf用户 <cfid> - 不带参数则查询自己的，带参数则查询别人的
+👤 /mycf - 查询自己的cf账号
+🎮 /绑定cf <cfid> - 绑定cf账号
+ℹ️ /去哪吃
+🤖 /ai <content> - 调用AI
 ====================
 """
     await message._api.post_group_message(
@@ -34,6 +35,15 @@ async def help_command(message: GroupMessage, params):
     )
     return True
 
+
+LUCK_CATEGORIES = ['工作运势', '爱情运势', '健康运势', '财运运势']
+SUGGESTIONS = {
+    '工作运势': ["玩Minecraft", "出算法题", "多写代码", "多学习", "复习数据结构", "复习专业课", "打东方", "打魔兽", "打杀戮尖塔", "打P5R"],
+    '爱情运势': ["陪女朋友", "送礼物", "玩Bingo Game", "多关心", "玩真心话大冒险", "多表白"],
+    '健康运势': ["多运动", "早睡早起", "多喝水", "多吃水果蔬菜", "体检", "健身锻炼"],
+    '财运运势': ["投资理财", "购物", "抽卡"]
+}
+TABOOS = ["拖延", "不努力", "长时间玩游戏", "开摆", "玩Galgame", "写题解", "熬夜"]
 
 @Command("今日运势")
 async def today_fortune(message: GroupMessage, params):
@@ -62,8 +72,7 @@ async def today_fortune(message: GroupMessage, params):
                 return True
 
     # 运势值计算
-    luck_categories = ['工作运势', '爱情运势', '健康运势', '财运运势']
-    luck_values = {category: random.randint(0, 100) for category in luck_categories}
+    luck_values = dict(zip(LUCK_CATEGORIES, random.choices(range(101), k=len(LUCK_CATEGORIES))))
     all_luck = sum(luck_values.values()) / len(luck_values)
 
     if all_luck < 30:
@@ -125,27 +134,30 @@ async def today_fortune(message: GroupMessage, params):
     return True
 
 
-@Command("查看近期cf比赛")
+@Command("查看近期cf比赛", "cf比赛")
 async def recent_cf(message: GroupMessage, params):
-    response = requests.get("https://codeforces.com/api/contest.list?gym=false")
-    data = response.json()
+    async with aiohttp.ClientSession() as session:
+        async with session.get("https://codeforces.com/api/contest.list?gym=false") as response:
+            data = await response.json()
 
     if data['status'] == 'OK':
         contests = data['result']
+        upcoming_contests = [
+            contest for contest in contests if contest['phase'] == 'BEFORE'
+        ]
+
         result_str = "\n🏆 即将到来的Codeforces比赛 🏆\n"
+        for contest in reversed(upcoming_contests):
+            start_time = datetime.fromtimestamp(contest['startTimeSeconds'])
+            duration = contest['durationSeconds']
+            duration_hours = duration // 3600
+            duration_minutes = (duration % 3600) // 60
 
-        for contest in contests:
-            if contest['phase'] == 'BEFORE':
-                start_time = datetime.fromtimestamp(contest['startTimeSeconds'])
-                duration = contest['durationSeconds']
-                duration_hours = duration // 3600
-                duration_minutes = (duration % 3600) // 60
-
-                result_str += f" 比赛名称: {contest['name']}\n"
-                result_str += f" 开始时间: {start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
-                result_str += f" 持续时间: {duration_hours}小时{duration_minutes}分钟\n"
-                result_str += f" 类型: {contest['type']}\n"
-                result_str += "\n"
+            result_str += f" 比赛名称: {contest['name']}\n"
+            result_str += f" 开始时间: {start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
+            result_str += f" 持续时间: {duration_hours}小时{duration_minutes}分钟\n"
+            result_str += f" 类型: {contest['type']}\n"
+            result_str += "\n"
 
         await message._api.post_group_message(
             group_openid=message.group_openid,
@@ -184,7 +196,22 @@ async def where_to_eat(message: GroupMessage, params):
     return True
 
 
-@Command("查看cf用户")
+async def get_cf_user_info(handle):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"https://codeforces.com/api/user.info?handles={handle}") as response:
+            user_data = await response.json()
+
+        async with session.get(f"https://codeforces.com/profile/{handle}") as response:
+            html = await response.text()
+
+    tree = etree.HTML(html)
+    result = tree.xpath("//div[@class='_UserActivityFrame_footer']/div/div/div/text()")
+    ac = str(result[0]).split(" ")[0]
+
+    return user_data, ac
+
+
+@Command("查看cf用户", "mycf", "查cf")
 async def cf_user(message: GroupMessage, params):
     # 如果没有提供参数，尝试从数据库获取绑定的Codeforces账号
     if not params:
@@ -212,9 +239,7 @@ async def cf_user(message: GroupMessage, params):
     if isinstance(params, list):
         params = ";".join(params)
 
-    # 获取用户信息
-    response = requests.get(f"https://codeforces.com/api/user.info?handles={params}")
-    user_data = response.json()
+    user_data, ac = await get_cf_user_info(params)
 
     if user_data['status'] != 'OK':
         await message._api.post_group_message(
@@ -225,14 +250,6 @@ async def cf_user(message: GroupMessage, params):
         )
         return True
 
-    url = f"https://codeforces.com/profile/{params}"
-    response = requests.get(url).text
-    tree: etree._Element = etree.HTML(response, None)
-    result: list[etree._Element] = tree.xpath(
-        "//div[@class='_UserActivityFrame_footer']/div/div/div/text()")
-    target: str = str(result[0])
-    ac = target.split(" ")[0]
-
     user = user_data['result'][0]
     content = f"""
 🏆 Codeforces用户信息 🏆
@@ -242,7 +259,7 @@ async def cf_user(message: GroupMessage, params):
 🎖 当前段位: {user['rank']}
 👑 最高段位: {user['maxRank']}
 🏆 解题数: {ac}
-    """
+        """
 
     await message._api.post_group_message(
         group_openid=message.group_openid,
@@ -251,7 +268,6 @@ async def cf_user(message: GroupMessage, params):
         content=content,
     )
     return True
-
 
 @Command("绑定cf")
 async def bind_cf(message: GroupMessage, params):

@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="376e6bee-1e92-40e7-903a-a8c75ed5617d" name="更改" comment="111">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot_qq/qqutils/ext.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot_qq/qqutils/ext.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/command.py" beforeDir="false" afterPath="$PROJECT_DIR$/command.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commandAI.py" beforeDir="false" afterPath="$PROJECT_DIR$/commandAI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messageSend.py" beforeDir="false" afterPath="$PROJECT_DIR$/messageSend.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +26,7 @@
   <component name="Git.Settings">
     <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -119,7 +123,13 @@
       <workItem from="1721212549634" duration="11000" />
       <workItem from="1721218188560" duration="3808000" />
       <workItem from="1721226478676" duration="26000" />
-      <workItem from="1721227042470" duration="865000" />
+      <workItem from="1721227042470" duration="1196000" />
+      <workItem from="1721228354220" duration="71000" />
+      <workItem from="1721258902894" duration="5147000" />
+      <workItem from="1721268270299" duration="84000" />
+      <workItem from="1721268881403" duration="1558000" />
+      <workItem from="1721270574043" duration="12000" />
+      <workItem from="1721286985736" duration="2481000" />
     </task>
     <task id="LOCAL-00001" summary="111">
       <option name="closed" value="true" />
@@ -169,7 +179,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721227244237</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="111">
+      <option name="closed" value="true" />
+      <created>1721228065373</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1721228065373</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -197,6 +215,6 @@
     <SUITE FILE_PATH="coverage/demo$__init__.coverage" NAME="__init__ 覆盖结果" MODIFIED="1721010293888" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/AppData/Local/Programs/Python/Python312/Lib/asyncio" />
     <SUITE FILE_PATH="coverage/demo$commandAI.coverage" NAME="commandAI 覆盖结果" MODIFIED="1721097609113" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/demo$dailyLuck.coverage" NAME="dailyLuck 覆盖结果" MODIFIED="1720942834585" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/bot_qq/commands" />
-    <SUITE FILE_PATH="coverage/demo$test.coverage" NAME="test 覆盖结果" MODIFIED="1721209112440" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/demo$test.coverage" NAME="test 覆盖结果" MODIFIED="1721288277496" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
