@@ -1,9 +1,11 @@
 from functools import wraps
+
 from botpy.message import GroupMessage
 import logging
 
 _log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)  # Set the logging level to debug
+
 
 class Command:
     command_handlers = []
