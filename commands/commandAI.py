@@ -3,7 +3,6 @@ from zhipuai import ZhipuAI
 
 from bot_qq.qqutils.ext import Command
 
-client = ZhipuAI(api_key="d1e2424354a9423bec7c26dbf0277e4e.YPjaZtTSaNpz8O22")
 
 @Command("ai")
 async def ai_command(message: GroupMessage, params):
