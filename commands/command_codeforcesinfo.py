@@ -1,30 +1,38 @@
 import logging
 import sqlite3
+
 import aiohttp
-import requests
+import cfscrape  # Import cfscrape
 from botpy.message import GroupMessage
 from lxml import etree
-
 import messageSend
 from bot_qq.qqutils.ext import Command
 
 _log = logging.getLogger(__name__)
 
+# 同步函数，用于通过 cfscrape 获取页面内容
+def get_cf_profile_html(handle):
+    scraper = cfscrape.create_scraper()  # 创建一个 cfscrape 对象
+    html = scraper.get(f"https://codeforces.com/profile/{handle}").text
+    return html
 
 async def get_cf_user_info(handle):
     async with aiohttp.ClientSession() as session:
         async with session.get(f"https://codeforces.com/api/user.info?handles={handle}") as response:
             user_data = await response.json()
 
-        async with session.get(f"https://codeforces.com/profile/{handle}") as response:
-            html = await response.text()
+    # 使用 cfscrape 获取用户的 profile 页面 HTML
+    html = get_cf_profile_html(handle)
 
     tree = etree.HTML(html)
-    result = tree.xpath("//div[@class='_UserActivityFrame_footer']/div/div/div/text()")
-    ac = str(result[0]).split(" ")[0]
+    result = tree.xpath("//div[@class='_UserActivityFrame_footer']//div[@class='_UserActivityFrame_counterValue']/text()")
+
+    if not result:
+        ac = "N/A"  # Handle the case where the XPath returns nothing
+    else:
+        ac = str(result[0]).split(" ")[0]
 
     return user_data, ac
-
 
 @Command("查看cf用户", "mycf", "cf")
 async def cf_user(message: GroupMessage, params):
@@ -82,50 +90,4 @@ async def cf_user(message: GroupMessage, params):
         msg_id=message.id,
         content=content,
     )
-    return True
-
-
-@Command("绑定cf", "bindcf")
-async def bind_cf(message: GroupMessage, params):
-    # 获取稳定的用户ID
-    me_info = message.author.member_openid
-    qqid = me_info
-
-    if isinstance(params, list):
-        params = ";".join(params)
-
-    isExist = requests.get("https://codeforces.com/api/user.info?handles=" + params)
-    if isExist.json()['status'] == 'FAILED':
-        content = "\n❌ 请提供正确的Codeforces用户名。"
-    else:
-        messageSend.init_db()
-
-        cfid = str(params)
-        try:
-            with sqlite3.connect('databases/user.db') as conn:
-                c = conn.cursor()
-                c.execute('''
-                    INSERT INTO cf_user_bindings (qqid, cfid)
-                    VALUES (?, ?)
-                    ON CONFLICT(qqid) DO UPDATE SET
-                    cfid=excluded.cfid
-                ''', (qqid, cfid))
-                conn.commit()
-
-                # 立即查询并打印结果
-                c.execute('SELECT * FROM cf_user_bindings WHERE qqid=?', (qqid,))
-                result = c.fetchone()
-
-            content = f"\n✅ 成功绑定Codeforces账号: {params}"
-        except sqlite3.Error as e:
-            content = f"\n❌ 数据库操作失败: {str(e)}"
-
-    await message._api.post_group_message(
-        group_openid=message.group_openid,
-        msg_type=0,
-        msg_id=message.id,
-        content=content,
-
-    )
-
     return True

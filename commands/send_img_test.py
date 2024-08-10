@@ -1,11 +1,25 @@
-from botpy.message import GroupMessage
+import logging
+import random
 
+from botpy.message import GroupMessage
 from bot_qq.qqutils.ext import Command
+
+_log = logging.getLogger(__name__)
 
 
 @Command("test")
 async def on_group_at_message_create(message: GroupMessage, params):
-    file_url = "https://s2.loli.net/2024/08/08/4mtKeNZlTQX8u2v.gif"  # 这里需要填写上传的资源Url
+    imgs = [
+        "https://s2.loli.net/2024/08/08/4mtKeNZlTQX8u2v.gif",
+        "https://s2.loli.net/2024/08/09/eyZ7D5b1jcTvrQd.jpg",
+        "https://s2.loli.net/2024/08/09/9Mr5eTzKgxLA6UW.jpg",
+        "https://s2.loli.net/2024/08/09/YOWygPhuqmzUA5c.gif",
+        "https://s2.loli.net/2024/08/09/V6XHQlsaETqYcPC.gif"
+    ]
+
+    file_url = imgs[random.randint(0, len(imgs) - 1)]
+    _log.info(file_url)
+
     uploadMedia = await message._api.post_group_file(
         group_openid=message.group_openid,
         file_type=1,  # 文件类型要对应上，具体支持的类型见方法说明

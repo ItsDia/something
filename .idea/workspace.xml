@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="376e6bee-1e92-40e7-903a-a8c75ed5617d" name="更改" comment="111" />
+    <list default="true" id="376e6bee-1e92-40e7-903a-a8c75ed5617d" name="更改" comment="111">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commands/commandAI.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/commandAI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commands/command_codeforcesinfo.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/command_codeforcesinfo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commands/send_img_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/send_img_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messageSend.py" beforeDir="false" afterPath="$PROJECT_DIR$/messageSend.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -57,7 +64,7 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Projects/PycharmProjects/something&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Projects/myproject/pythonProject3&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -124,7 +131,10 @@
       <workItem from="1721994451339" duration="7000" />
       <workItem from="1722592003618" duration="78000" />
       <workItem from="1723123581047" duration="3717000" />
-      <workItem from="1723127973767" duration="1278000" />
+      <workItem from="1723127973767" duration="2694000" />
+      <workItem from="1723207443393" duration="854000" />
+      <workItem from="1723295078353" duration="40000" />
+      <workItem from="1723298228355" duration="1884000" />
     </task>
     <task id="LOCAL-00001" summary="111">
       <option name="closed" value="true" />
@@ -190,7 +200,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723129256953</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="111">
+      <option name="closed" value="true" />
+      <created>1723129289007</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1723129289007</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
