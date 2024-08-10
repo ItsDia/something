@@ -7,7 +7,7 @@ import json
 
 with open('config.json', 'r') as f:
     config = json.load(f)
-    client = ZhipuAI(api_key=config['API_KEY'])
+    client = ZhipuAI(api_key=config[0]['API_KEY'])
 
 
 @Command("ai")

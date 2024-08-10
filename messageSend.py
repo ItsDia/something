@@ -95,7 +95,7 @@ if __name__ == "__main__":
     import json
     with open('config.json', 'r') as f:
         config = json.load(f)
-    APPID = config['APPID']
-    SECRET = config['SECRET']
+    APPID = config[0]['APPID']
+    SECRET = config[0]['SECRET']
 
     client.run(appid=APPID, secret=SECRET)
