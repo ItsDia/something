@@ -23,7 +23,6 @@ async def where_to_eat(message: GroupMessage, params):
         "去外面吃",
         "点外卖吧，我知道你一开始就是这么想的",
         "不吃了，减肥",
-        "厕所。"
     ]
     content = f"\n今天推荐: {random.choice(choices)}"
     await message._api.post_group_message(

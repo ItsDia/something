@@ -16,6 +16,7 @@ import commands.command_dailyluck
 import commands.command_recentcontent
 import commands.command_where2eat
 import commands.send_img_test
+
 def init_db():
     conn = sqlite3.connect('databases/user.db')
     cursor = conn.cursor()
@@ -75,7 +76,10 @@ class MyClient(botpy.Client):
             group_openid=message.group_openid,
             msg_type=0,
             msg_id=message.id,
-            content="Command not found.\nPlease try to use /help to get help.",
+            content='''
+at我的同时请加上指令哦.
+比如@ShikanokoBOT /help.
+'''
         )
         return
 
@@ -88,5 +92,10 @@ if __name__ == "__main__":
     intents = botpy.Intents(public_messages=True)
     client = MyClient(intents=intents)
 
+    import json
+    with open('config.json', 'r') as f:
+        config = json.load(f)
+    APPID = config['APPID']
+    SECRET = config['SECRET']
 
     client.run(appid=APPID, secret=SECRET)
