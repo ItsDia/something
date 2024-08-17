@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="376e6bee-1e92-40e7-903a-a8c75ed5617d" name="更改" comment="escape the cloudflare validation of codeforces">
-      <change afterPath="$PROJECT_DIR$/bot_qq/templates/template.html" afterDir="false" />
+    <list default="true" id="376e6bee-1e92-40e7-903a-a8c75ed5617d" name="更改" comment="change the AI submission way to image">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commands/commandAI.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/commandAI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commands/command_dailyluck.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/command_dailyluck.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot_qq/templates/template.j2" beforeDir="false" afterPath="$PROJECT_DIR$/bot_qq/templates/template.j2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commands/command_codeforcesinfo.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/command_codeforcesinfo.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,7 +138,7 @@
       <workItem from="1723301253497" duration="157000" />
       <workItem from="1723310726246" duration="1638000" />
       <workItem from="1723629844025" duration="23000" />
-      <workItem from="1723895113106" duration="6630000" />
+      <workItem from="1723895113106" duration="10216000" />
     </task>
     <task id="LOCAL-00001" summary="111">
       <option name="closed" value="true" />
@@ -246,7 +244,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723311978320</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="change the AI submission way to image">
+      <option name="closed" value="true" />
+      <created>1723902288544</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1723902288544</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -268,7 +274,8 @@
     <MESSAGE value="Delete botpy.log" />
     <MESSAGE value="111" />
     <MESSAGE value="escape the cloudflare validation of codeforces" />
-    <option name="LAST_COMMIT_MESSAGE" value="escape the cloudflare validation of codeforces" />
+    <MESSAGE value="change the AI submission way to image" />
+    <option name="LAST_COMMIT_MESSAGE" value="change the AI submission way to image" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/something$command.coverage" NAME="command 覆盖结果" MODIFIED="1722592016633" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

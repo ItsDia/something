@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=2.0" />
-  <link rel="stylesheet" href="./bootstrap.min.css" />
+  <link rel="stylesheet" href="/root/qqbot/bot_qq/templates/bootstrap.min.css" />
   <title>Document</title>
   <style>
     body {
@@ -144,7 +144,7 @@
       width: 64px;
       top: 64px;
       left: 16px;
-      background-image: url({{ headLogoURL }});
+      background-image: url({{ avatar }});
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -155,7 +155,7 @@
       <p class="text-white font-sz-12 font-weight-300" style="height: 0px">
         USERNAME
       </p>
-      <p class="text-white font-sz-32 font-weight-500">{{ username }}</p>
+        <p class="text-white font-sz-32 font-weight-500">{{ username }}</p>
     </div>
 
     <!-- rank -->
@@ -164,7 +164,7 @@
         Solved
       </p>
       <p class="text-white font-sz-32 font-weight-500" style="height: 32px">
-        {{ solved }}
+        {{ ac }}
       </p>
     </div>
     <!-- Rating -->
@@ -173,7 +173,7 @@
         Contest Rating
       </p>
       <p class="text-white font-weight-800" style="font-size: 64px; height: 64px">
-        {{ rating }}
+        {{ Rating }}
       </p>
     </div>
   </div>

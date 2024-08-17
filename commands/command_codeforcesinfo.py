@@ -1,14 +1,36 @@
+from botpy.message import GroupMessage
+from jinja2 import Environment, FileSystemLoader
+from lxml import etree
+from bot_qq.qqutils.ext import Command
+
+import json
 import logging
 import sqlite3
 import aiohttp
+import imgkit
+import messageSend
 import cfscrape  # Import cfscrape
 import requests
-from botpy.message import GroupMessage
-from lxml import etree
-import messageSend
-from bot_qq.qqutils.ext import Command
 
-_log = logging.getLogger(__name__)
+with open('config.json', 'r') as f:
+    config = json.load(f)
+    sm_ms_api_key = config[0]['PNG_API_KEY']
+
+env = Environment(loader=FileSystemLoader('bot_qq/templates'))
+code_template = env.get_template('template.j2')
+
+rating_levels = {
+            "newbie": range(0, 1200),
+            "pupil": range(1200, 1400),
+            "specialist": range(1400, 1600),
+            "expert": range(1600, 1900),
+            "candidate-master": range(1900, 2100),
+            "master": range(2100, 2300),
+            "international-master": range(2300, 2400),
+            "grandmaster": range(2400, 2600),
+            "international-grandmaster": range(2600, 3000),
+            "legendary-grandmaster": range(3000, 9999),
+        }
 
 # 同步函数，用于通过 cfscrape 获取页面内容
 def get_cf_profile_html(handle):
@@ -80,31 +102,79 @@ async def cf_user(message: GroupMessage, params):
             )
             return True
 
+        #USER INFO
         user = user_data['result'][0]
-        content = f"""
-    🏆 Codeforces用户信息 🏆
-    👤 用户名: {user['handle']}
-    📊 当前评分: {user['rating']} 
-    🔝 最高评分: {user['maxRating']}
-    🎖 当前段位: {user['rank']}
-    👑 最高段位: {user['maxRank']}
-    🏆 解题数: {ac}
-            """
+        for level, rating_range in rating_levels.items():
+            if user['rating'] in rating_range:
+                user['rank'] = level
 
-        await message._api.post_group_message(
-            group_openid=message.group_openid,
-            msg_type=0,
-            msg_id=message.id,
-            content=content,
+        image = code_template.render(
+            level=user['rank'],
+            Rating=user['rating'],
+            maxRating=user['maxRating'],
+            avatar=user['avatar'],
+            username=user['handle'],
+            ac=ac
         )
+        imgkit.from_string(image, 'userinfo.jpg', options={'width': '400', 'height': '225', 'encoding': "UTF-8", 'enable-local-file-access': None})
+        #END
+
+        # 上传图片到 sm.ms
+        try:
+            headers = {
+                'Authorization': sm_ms_api_key
+            }
+            files = {
+                'smfile': ('userinfo.jpg', open('userinfo.jpg', 'rb'))
+            }
+            response = requests.post('https://sm.ms/api/v2/upload', headers=headers, files=files)
+            response_json = response.json()
+
+            # 如果上传失败
+            if not response_json.get('success'):
+                raise Exception(f"图片上传失败: {response_json.get('message')}")
+
+            url = response_json['data']['url']
+
+            # 上传成功后，发送图片
+            uploadMedia = await message._api.post_group_file(
+                group_openid=message.group_openid,
+                file_type=1,  # 文件类型要对应上，具体支持的类型见方法说明
+                url=url  # 只支持在线url
+            )
+
+            # 资源上传后，会得到 Media，用于发送消息
+            await message._api.post_group_message(
+                group_openid=message.group_openid,
+                msg_type=7,  # 7表示富媒体类型
+                msg_id=message.id,
+                media=uploadMedia
+            )
+
+            try:
+                requests.get('https://sm.ms/api/v2/delete/' + response_json['data']['hash'], headers=headers)
+            except Exception as e:
+                print(e)
+
+        except Exception as e:
+            print(e)
+            await message._api.post_group_message(
+                group_openid=message.group_openid,
+                msg_type=0,
+                msg_id=message.id,
+                content=f"\n❌ 图片上传失败",
+            )
+            return True
+
         return True
 
     except Exception as e:
+        print(e)
         await message._api.post_group_message(
             group_openid=message.group_openid,
             msg_type=0,
             msg_id=message.id,
-            content=f"\n❌ 查询失败: {str(e)}",
+            content=f"\n❌ 查询失败",
         )
         return True
 
