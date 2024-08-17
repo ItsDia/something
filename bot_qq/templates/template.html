@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* From Uiverse.io by Yaya12085 */
+        .code-editor {
+            max-width: 500px;
+            background-color: #1d1e22;
+            box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 2px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px;
+        }
+
+        .title {
+            font-family: 'Microsoft YaHei', Lato, sans-serif; /* 确保中文字符正常显示 */
+            font-weight: 900;
+            font-size: 14px;
+            letter-spacing: 1.57px;
+            color: rgb(212 212 212);
+        }
+
+        .icon {
+            width: 20px;
+            transition: .2s ease;
+        }
+
+        .icon:hover {
+            cursor: pointer;
+            border-radius: 50px;
+            background-color: #6e7281;
+        }
+
+        .editor-content {
+            margin: 0 10px 10px;
+            color: white;
+            font-family: 'Microsoft YaHei', Lato, sans-serif; /* 确保代码区域也有合适的字体 */
+        }
+
+        .property {
+            margin-left: 30px;
+        }
+
+        .property:hover {
+            cursor: text;
+        }
+
+        .editor-content .color-0 {
+            color: rgb(86, 156, 214); /* 蓝色 */
+        }
+
+        .editor-content .color-1 {
+            color: rgb(182, 206, 168); /* 浅绿色 */
+        }
+
+        .editor-content .color-2 {
+            color: rgb(156, 220, 254); /* 浅蓝色 */
+        }
+
+        .editor-content .color-3 {
+            color: rgb(207, 146, 120); /* 浅棕色 */
+        }
+
+        .color-preview-1 {
+            height: 8px;
+            width: 8px;
+            border: 1px solid #fff;
+            display: inline-block;
+            margin-right: 3px;
+            background-color: #1d1e22;
+        }
+
+        .color-preview-2 {
+            height: 8px;
+            width: 8px;
+            border: 1px solid #fff;
+            display: inline-block;
+            margin-right: 3px;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+    <title></title>
+</head>
+<body>
+    <div class="code-editor">
+        <div class="header">
+            <span class="title" style="color: white">注意AI生成的结果不一定准确，内容仅供参考请勿直接使用</span>
+        </div>
+        <div class="editor-content">
+            <div class="code">
+                <pre class="color-1">
+                    {{ content }}
+                </pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -63,14 +63,13 @@ async def today_fortune(message: GroupMessage, params):
 
         # 今日运势内容
         content = f"""
-    🔮 今日运势 - {current_date.strftime('%Y年%m月%d日')} 🔮
+🔮 今日运势 - {current_date.strftime('%Y年%m月%d日')} 🔮
     
-    {' '.join(['✨' for _ in range(int(all_luck / 10))])}
-    总体运势: {fortune} ({int(all_luck)}/100)
+{' '.join(['✨' for _ in range(int(all_luck / 10))])}
+总体运势: {fortune} ({int(all_luck)}/100)
     
-    📊 详细运势:
-    {chr(10).join([f"  {category}: {'🟩' * int(value / 10)}{'🟨' * (10 - int(value / 10))} {value}%" for category, value in luck_values.items()])}
-    
+📊 详细运势:
+{chr(10).join([f"  {category}: {'🟩' * int(value / 10)}{'🟨' * (10 - int(value / 10))} {value}%" for category, value in luck_values.items()])}    
     """
 
         # 建议和禁忌内容
@@ -107,7 +106,7 @@ async def today_fortune(message: GroupMessage, params):
             content=content,
         )
         return True
-    
+
     except Exception as e:
         await message._api.post_group_message(
             group_openid=message.group_openid,
