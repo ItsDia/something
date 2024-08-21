@@ -20,23 +20,25 @@ env = Environment(loader=FileSystemLoader('bot_qq/templates'))
 code_template = env.get_template('template.j2')
 
 rating_levels = {
-            "newbie": range(0, 1200),
-            "pupil": range(1200, 1400),
-            "specialist": range(1400, 1600),
-            "expert": range(1600, 1900),
-            "candidate-master": range(1900, 2100),
-            "master": range(2100, 2300),
-            "international-master": range(2300, 2400),
-            "grandmaster": range(2400, 2600),
-            "international-grandmaster": range(2600, 3000),
-            "legendary-grandmaster": range(3000, 9999),
-        }
+    "newbie": range(0, 1200),
+    "pupil": range(1200, 1400),
+    "specialist": range(1400, 1600),
+    "expert": range(1600, 1900),
+    "candidate-master": range(1900, 2100),
+    "master": range(2100, 2300),
+    "international-master": range(2300, 2400),
+    "grandmaster": range(2400, 2600),
+    "international-grandmaster": range(2600, 3000),
+    "legendary-grandmaster": range(3000, 9999),
+}
+
 
 # 同步函数，用于通过 cfscrape 获取页面内容
 def get_cf_profile_html(handle):
     scraper = cfscrape.create_scraper()  # 创建一个 cfscrape 对象
     html = scraper.get(f"https://codeforces.com/profile/{handle}").text
     return html
+
 
 async def get_cf_user_info(handle):
     async with aiohttp.ClientSession() as session:
@@ -53,7 +55,8 @@ async def get_cf_user_info(handle):
     html = get_cf_profile_html(handle)
 
     tree = etree.HTML(html)
-    result = tree.xpath("//div[@class='_UserActivityFrame_footer']//div[@class='_UserActivityFrame_counterValue']/text()")
+    result = tree.xpath(
+        "//div[@class='_UserActivityFrame_footer']//div[@class='_UserActivityFrame_counterValue']/text()")
 
     if not result:
         ac = "N/A"  # Handle the case where the XPath returns nothing
@@ -61,6 +64,7 @@ async def get_cf_user_info(handle):
         ac = str(result[0]).split(" ")[0]
 
     return user_data, ac
+
 
 @Command("查看cf用户", "mycf", "cf")
 async def cf_user(message: GroupMessage, params):
@@ -102,7 +106,7 @@ async def cf_user(message: GroupMessage, params):
             )
             return True
 
-        #USER INFO
+        # USER INFO
         user = user_data['result'][0]
         for level, rating_range in rating_levels.items():
             if user['rating'] in rating_range:
@@ -116,8 +120,9 @@ async def cf_user(message: GroupMessage, params):
             username=user['handle'],
             ac=ac
         )
-        imgkit.from_string(image, 'userinfo.jpg', options={'width': '400', 'height': '225', 'encoding': "UTF-8", 'enable-local-file-access': None})
-        #END
+        imgkit.from_string(image, 'userinfo.jpg', options={'width': '400', 'height': '225', 'encoding': "UTF-8",
+                                                           'enable-local-file-access': None})
+        # END
 
         # 上传图片到 sm.ms
         try:
@@ -162,7 +167,7 @@ async def cf_user(message: GroupMessage, params):
                 group_openid=message.group_openid,
                 msg_type=0,
                 msg_id=message.id,
-                content=f"\n❌ 图片上传失败",
+                content=f"\n❌ 图片上传失败 {str(e)}",
             )
             return True
 
@@ -174,9 +179,10 @@ async def cf_user(message: GroupMessage, params):
             group_openid=message.group_openid,
             msg_type=0,
             msg_id=message.id,
-            content=f"\n❌ 查询失败",
+            content=f"\n❌ 查询失败 {str(e)}",
         )
         return True
+
 
 @Command("绑定cf", "bindcf")
 async def bind_cf(message: GroupMessage, params):
@@ -217,7 +223,7 @@ async def bind_cf(message: GroupMessage, params):
             content=content,
         )
         return True
-    
+
     except Exception as e:
         await message._api.post_group_message(
             group_openid=message.group_openid,

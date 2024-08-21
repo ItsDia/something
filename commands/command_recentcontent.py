@@ -6,33 +6,25 @@ from botpy.message import GroupMessage
 
 from bot_qq.qqutils.ext import Command
 
-_log = logging.getLogger(__name__)
-
-
-@Command("查看近期cf比赛", "recentcf")
+@Command("查看近期cf比赛", "recentcf", "比赛")
 async def recent_cf(message: GroupMessage, params):
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.get("https://codeforces.com/api/contest.list?gym=false") as response:
-                data = await response.json()
+            async with session.get("https://contests.sdutacm.cn/contests.json") as response:
+                contests = await response.json()
 
-        if data['status'] == 'OK':
-            contests = data['result']
-            upcoming_contests = [
-                contest for contest in contests if contest['phase'] == 'BEFORE'
-            ]
+            result_str = "\n数据来源: SDUTACM Contest API\n\n"
+            for contest in contests:
+                start_time = datetime.fromisoformat(contest['start_time'])
+                end_time = datetime.fromisoformat(contest['end_time'])
+                duration = end_time - start_time
+                start_time_str = start_time.strftime('%Y-%m-%d %H:%M:%S %Z')
 
-            result_str = "\n🏆 即将到来的Codeforces比赛 🏆\n"
-            for contest in reversed(upcoming_contests):
-                start_time = datetime.fromtimestamp(contest['startTimeSeconds'])
-                duration = contest['durationSeconds']
-                duration_hours = duration // 3600
-                duration_minutes = (duration % 3600) // 60
-
-                result_str += f" 比赛名称: {contest['name']}\n"
-                result_str += f" 开始时间: {start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
-                result_str += f" 持续时间: {duration_hours}小时{duration_minutes}分钟\n"
-                result_str += f" 类型: {contest['type']}\n"
+                result_str += f"来源: {contest['source']}\n"
+                result_str += f"比赛名称: {contest['name']}\n"
+                result_str += f"开始时间: {start_time_str}\n"
+                result_str += f"持续时间: {duration}\n"
+                result_str += f"比赛ID: {contest['contest_id']}\n"
                 result_str += "\n"
 
             await message._api.post_group_message(
