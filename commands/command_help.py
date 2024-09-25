@@ -18,6 +18,8 @@ async def help_command(message: GroupMessage, params):
 🎮 /绑定cf <cfid> - 绑定cf账号
 (/bindcf <cfid> 也可以)
 ℹ️ /去哪吃
+/ai <text> 询问AI
+/t2i <text> 生成思维导图
 ====================
 """
     await message._api.post_group_message(

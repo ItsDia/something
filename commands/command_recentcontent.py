@@ -14,6 +14,16 @@ async def recent_cf(message: GroupMessage, params):
                 contests = await response.json()
 
             result_str = "\n数据来源: SDUTACM Contest API\n\n"
+            if params:
+                if params[0] == "cf":
+                    source = "codeforce"
+                elif params[0] == "luogu":
+                    source = "洛谷"
+                elif params[0] == "vjudge":
+                    source = "Virtual Judge"
+                else:
+                    source = params[0].lower()
+                contests = list(filter(lambda x: source in x['source'].lower(), contests))
             for contest in contests:
                 start_time = datetime.fromisoformat(contest['start_time'])
                 end_time = datetime.fromisoformat(contest['end_time'])
