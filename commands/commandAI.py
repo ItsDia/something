@@ -16,7 +16,7 @@ with open('config.json', 'r') as f:
 
 env = Environment(loader=FileSystemLoader('bot_qq/templates'))
 code_template = env.get_template('template.html')
-
+echarts_template = env.get_template('echarts.j2')
 
 @Command("ai")
 async def ai_command(message: GroupMessage, params):
@@ -131,7 +131,7 @@ async def mindmap_command(message: GroupMessage, params):
         result = decoded_response["response"]
 
         # 直接将思维导图数据传给 Jinja2 模板
-        image = code_template.render(mindmap_data=result)  # 使用 mindmap_data
+        image = echarts_template.render(mindmap_data=result)  # 使用 mindmap_data
         imgkit.from_string(image, 'out.jpg', options={'encoding': "UTF-8"})
 
         # 上传图片到 sm.ms

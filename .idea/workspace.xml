@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="376e6bee-1e92-40e7-903a-a8c75ed5617d" name="更改" comment="contest API from SDUTACM">
-      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bot_qq/templates/echarts.j2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/demo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/demo.iml" afterDir="false" />
+    <list default="true" id="376e6bee-1e92-40e7-903a-a8c75ed5617d" name="更改" comment="add some new function">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/commands/commandAI.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/commandAI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ernie_api_thing.py" beforeDir="false" afterPath="$PROJECT_DIR$/ernie_api_thing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,7 +178,7 @@
       <workItem from="1727247390955" duration="2326000" />
       <workItem from="1727253511759" duration="1166000" />
       <workItem from="1727272762946" duration="3438000" />
-      <workItem from="1727330210971" duration="4645000" />
+      <workItem from="1727330210971" duration="7341000" />
     </task>
     <task id="LOCAL-00001" summary="111">
       <option name="closed" value="true" />
@@ -321,7 +316,23 @@
       <option name="project" value="LOCAL" />
       <updated>1727253552741</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="add some new function">
+      <option name="closed" value="true" />
+      <created>1727335076816</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1727335076816</updated>
+    </task>
+    <task id="LOCAL-00019" summary="add some new function">
+      <option name="closed" value="true" />
+      <created>1727335113346</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1727335113346</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -346,7 +357,8 @@
     <MESSAGE value="change the AI submission way to image" />
     <MESSAGE value="change the CodeForces submission way to image" />
     <MESSAGE value="contest API from SDUTACM" />
-    <option name="LAST_COMMIT_MESSAGE" value="contest API from SDUTACM" />
+    <MESSAGE value="add some new function" />
+    <option name="LAST_COMMIT_MESSAGE" value="add some new function" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/something$RAG.coverage" NAME="RAG 覆盖结果" MODIFIED="1727244586801" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
