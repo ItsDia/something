@@ -16,7 +16,7 @@ with open('config.json', 'r') as f:
 
 env = Environment(loader=FileSystemLoader('bot_qq/templates'))
 code_template = env.get_template('template.html')
-echarts_template = env.get_template('echarts.j2')
+echarts_template = env.get_template('echarts.html')
 
 @Command("ai")
 async def ai_command(message: GroupMessage, params):
