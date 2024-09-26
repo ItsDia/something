@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+</head>
+<body>
+  <div id="main" style="width: 600px;height:400px;"></div>
+  <script>
+    var mindmapData = {{ mindmap_data|tojson }};  // 直接从模板传入数据
+    var chartDom = document.getElementById('main');
+    var myChart = echarts.init(chartDom);
+
+    myChart.setOption({
+      tooltip: {
+        trigger: 'item',
+        triggerOn: 'mousemove'
+      },
+      series: [
+        {
+          type: 'tree',
+          data: [mindmapData],  // 使用传入的数据
+          top: '1%',
+          left: '7%',
+          bottom: '1%',
+          right: '20%',
+          symbolSize: 7,
+          label: {
+            position: 'left',
+            verticalAlign: 'middle',
+            align: 'right',
+            fontSize: 9
+          },
+          leaves: {
+            label: {
+              position: 'right',
+              verticalAlign: 'middle',
+              align: 'left'
+            }
+          },
+          emphasis: {
+            focus: 'descendant'
+          },
+          expandAndCollapse: true,
+          animationDuration: 550,
+          animationDurationUpdate: 750
+        }
+      ]
+    });
+  </script>
+</body>
+</html>

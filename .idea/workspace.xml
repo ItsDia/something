@@ -5,15 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="376e6bee-1e92-40e7-903a-a8c75ed5617d" name="更改" comment="contest API from SDUTACM">
-      <change afterPath="$PROJECT_DIR$/commands/training_data.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/db.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ernie_api_thing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bot_qq/templates/echarts.j2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/demo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/demo.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/botpy.log" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/commands/commandAI.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/commandAI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commands/command_help.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/command_help.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commands/command_recentcontent.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/command_recentcontent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ernie_api_thing.py" beforeDir="false" afterPath="$PROJECT_DIR$/ernie_api_thing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,6 +23,7 @@
       <list>
         <option value="JavaScript File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -61,37 +59,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;JavaScript 调试.template.html.executor&quot;: &quot;Run&quot;,
-    &quot;Python.RAG.executor&quot;: &quot;Run&quot;,
-    &quot;Python.__init__.executor&quot;: &quot;Run&quot;,
-    &quot;Python.command.executor&quot;: &quot;Run&quot;,
-    &quot;Python.commandAI.executor&quot;: &quot;Run&quot;,
-    &quot;Python.common.executor&quot;: &quot;Run&quot;,
-    &quot;Python.dailyLuck.executor&quot;: &quot;Run&quot;,
-    &quot;Python.messageSend.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;ernie&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Projects/myproject/forBusiness&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "JavaScript 调试.echarts.html.executor": "Run",
+    "JavaScript 调试.template.html.executor": "Run",
+    "Python.RAG.executor": "Run",
+    "Python.__init__.executor": "Run",
+    "Python.command.executor": "Run",
+    "Python.commandAI.executor": "Run",
+    "Python.common.executor": "Run",
+    "Python.dailyLuck.executor": "Run",
+    "Python.messageSend.executor": "Run",
+    "Python.test.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "ernie",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/Projects/myproject/forBusiness",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;sqlite&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\17119\PycharmProjects\something\commands" />
@@ -181,6 +181,9 @@
       <workItem from="1727185708361" duration="635000" />
       <workItem from="1727243980014" duration="3346000" />
       <workItem from="1727247390955" duration="2326000" />
+      <workItem from="1727253511759" duration="1166000" />
+      <workItem from="1727272762946" duration="3438000" />
+      <workItem from="1727330210971" duration="4645000" />
     </task>
     <task id="LOCAL-00001" summary="111">
       <option name="closed" value="true" />
@@ -310,7 +313,15 @@
       <option name="project" value="LOCAL" />
       <updated>1724244501516</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="contest API from SDUTACM">
+      <option name="closed" value="true" />
+      <created>1727253552741</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1727253552741</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

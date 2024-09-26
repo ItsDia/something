@@ -6,6 +6,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Python 3.12 (something)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="echarts" level="application" />
   </component>
   <component name="PackageRequirementsSettings">
     <option name="removeUnused" value="true" />

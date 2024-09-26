@@ -1,6 +1,7 @@
 import json
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import pandas as pd
 import erniebot
 from db import milvusClient
@@ -8,6 +9,7 @@ import time
 import logging
 
 app = Flask(__name__)
+CORS(app)
 
 erniebot.api_type = "aistudio"
 
@@ -76,10 +78,21 @@ def bot(text, llm):
     ragResult = mc.search(text_embedding)
 
     instruction = '''
-你是一位智能编程助手，你会为用户回答关于编程、代码、计算机方面的任何问题，并提供 'Markdown格式的规范、可以执行、准确安全、换行标准的代码'
-注意代码本身不能和markdown语法冲突，如果冲突请解决，而且markdown的文字颜色为'白色'或者其他不与黑色背景冲突的颜色,代码块的背景颜色设置成黑色,并在必要时提供详细的解释。
-任务：请为代码纠正或者生成代码，记得每行代码都要附上注释，有必要时还需要写出具体的知识点，如果问的是数据中已经有的题目，记得把题目的内容也贴上去。
-代码注意换行，代码默认使用C语言或者C++语言，记得给用户标注是用的什么语言。
+### 角色
+你是一位智能编程助手，负责回答关于编程、代码和计算机方面的所有问题。请提供符合以下要求的回答：
+
+### 任务
+根据[给定的文段]回答用户问题，纠正或生成代码。默认使用 C 语言或 C++ 语言，并在回应中标注所用语言。
+
+### 格式
+使用 Markdown 格式，代码块背景颜色为黑色，文字颜色为白色或其他与黑色背景对比鲜明的颜色。
+
+### 代码要求
+确保代码可执行、准确、安全，遵循换行标准。
+每行代码应附带注释，必要时提供相关知识点的解释。
+附上[给定的文段]中的相关题目信息，以帮助用户理解代码。
+
+请遵循以上要求，确保回答的专业性与准确性。
 '''
     erniebotInput = instruction + "用户的提问是：" + text + "\n\n[给定的文段]是：" + ragResult
     logging.info("【文心Prompt】 {}".format(erniebotInput))
@@ -87,6 +100,28 @@ def bot(text, llm):
     logging.info("【文心Answer】 {}".format(chatResult))
     return chatResult
 
+def mind_map(text, llm):
+    instruction = '''
+### 角色
+你是一位 ECharts 思维导图助手。根据用户的提问，生成一个思维导图，其内容应包含用户输入的信息以及相关的知识点。思维导图应符合 ECharts 的格式。
+
+## 任务要求：
+### 格式：输出为 ECharts 的 JSON 格式，示例如下：
+```json
+{"name":"flare","children":[{"name":"analytics","children":[{"name":"cluster","children":[{"name":"AgglomerativeCluster","value":3938},{"name":"CommunityStructure","value":3812}]}]}]}```
+
+### 内容：
+思维导图的根节点应为用户输入的问题或主题。
+各个子节点应涵盖相关的知识点、概念或子主题。
+说明：确保生成的思维导图能够帮助用户更好地理解问题，并包含必要的细节与解释。
+
+请遵循以上要求，生成符合格式的思维导图。
+'''
+    erniebotInput = instruction + "用户的提问是：" + text
+    logging.info("【文心Prompt】 {}".format(erniebotInput))
+    chatResult = chat(llm, erniebotInput)
+    logging.info("【文心Answer】 {}".format(chatResult))
+    return chatResult
 
 @app.route('/chat', methods=['POST'])
 def chat_endpoint():
@@ -99,6 +134,16 @@ def chat_endpoint():
     response = bot(text, model)
     return jsonify({"response": response})
 
+@app.route('/mind_map', methods=['POST'])
+def mindmap_endpoint():
+    data = request.json
+    text = data.get('text')
+    model = data.get('model', 'ernie-4.0-turbo-8k')  # 默认模型名称
+    if not text:
+        return jsonify({"error": "No text provided"}), 400
+
+    response = mind_map(text, model)
+    return jsonify({"response": response})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
