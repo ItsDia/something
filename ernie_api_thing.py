@@ -46,12 +46,14 @@ def load_knowledge_base():
             data_df = pd.read_csv(dbFile, encoding='gbk')
         except:
             data_df = pd.read_csv(dbFile, encoding="utf-8")
-        reply = data_df.iloc[:, 0]
     elif dbFile.endswith(".xlsx") or dbFile.endswith(".xls"):
         data_df = pd.read_excel(dbFile)
-        reply = data_df.iloc[:, 0]
 
-    for rly in reply:
+    ids = data_df.iloc[:, 0]
+    contents = data_df.iloc[:, 1]
+    combined = [f"### 题目编号:{id_}  ### 题目内容: {content}" for id_, content in zip(ids, contents)]
+
+    for rly in combined:
         try:
             rlyEmbedding = embedding(rly)
             mc.insert(rly, rlyEmbedding)
