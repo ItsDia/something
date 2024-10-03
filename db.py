@@ -6,19 +6,20 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 
-class milvusClient():
+class milvusClient:
     def __init__(self):
-        # default_server.set_base_dir('milvus_data') # 持久化存储
         try:
             default_server.start()
-        except:
-            default_server.cleanup()
-            default_server.start()
+        except Exception as e:
+            logging.error(f"Error starting Milvus server: {e}")
+            default_server.cleanup()  # 清理已存在的服务
+            default_server.start()  # 重新启动
+
         self.collection = None
         connections.connect(host='127.0.0.1', port=default_server.listen_port)
 
     def createCollection(self):
-        connections.connect(host='127.0.0.1', port=default_server.listen_port)
+        # No need to connect again
         answer_id = FieldSchema(
             name="answer_id",
             dtype=DataType.INT64,
@@ -43,6 +44,7 @@ class milvusClient():
 
         collection_name = "qadb"
 
+        # 创建集合
         Collection(
             name=collection_name,
             schema=schema,
@@ -50,7 +52,7 @@ class milvusClient():
             shards_num=2
         )
 
-        self.collection = Collection("qadb")
+        self.collection = Collection(collection_name)  # 使用新创建的集合
 
     def load(self):
         connections.connect(host='127.0.0.1', port=default_server.listen_port)
@@ -98,4 +100,4 @@ class milvusClient():
             logging.info("【数据检索】 {}".format(answer))
             return answer
         except:
-            return None
+            return "未找到相关结果"

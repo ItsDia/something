@@ -128,10 +128,18 @@ async def mindmap_command(message: GroupMessage, params):
         }
         response = requests.post(API_URL + '/mind_map', json=data, headers=headers)
         decoded_response = json.loads(json.dumps(response.json()))
-        result = decoded_response["response"]
+        result = decoded_response["response"].strip('```json\n').strip('```').strip()
+        start_index = result.find('{')
+        if start_index != -1:
+            result = result[start_index:]
+        try:
+            minddata = json.loads(result)
+        except json.JSONDecodeError as e:
+            print(f"JSON Decode Error: {e}")
+            print(f"Received result: {result}")
 
         # 直接将思维导图数据传给 Jinja2 模板
-        image = echarts_template.render(mindmap_data=result)  # 使用 mindmap_data
+        image = echarts_template.render(mindmap_data=minddata)  # 使用 mindmap_data
         imgkit.from_string(image, 'out.jpg', options={'encoding': "UTF-8"})
 
         # 上传图片到 sm.ms

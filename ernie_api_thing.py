@@ -51,7 +51,7 @@ def load_knowledge_base():
 
     ids = data_df.iloc[:, 0]
     contents = data_df.iloc[:, 1]
-    combined = [f"### 题目编号:{id_}  ### 题目内容: {content}" for id_, content in zip(ids, contents)]
+    combined = [f"问:{id_} 答:{content}" for id_, content in zip(ids, contents)]
 
     for rly in combined:
         try:
